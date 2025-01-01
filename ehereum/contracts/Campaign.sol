@@ -26,7 +26,7 @@ contract Campaign {
 
     address public  manager;
     mapping (address => bool) public  approvers;
-    uint private approverCount;
+    uint public approverCount;
 
     uint public minContribution;
     Request[] public  requests;
@@ -58,7 +58,7 @@ contract Campaign {
     }
 
     modifier hasEnoughVotes(uint index) {
-        require(approverCount / 2 > requests[index].approvalCount);
+        require(requests[index].approvalCount >= approverCount / 2);
         _;
     }
 
@@ -68,11 +68,15 @@ contract Campaign {
     }
 
     function createRequest(string memory description, uint value, address recipient) public restricted {
-        Request storage newRequest = requests[0];
-        newRequest.description = description;
-        newRequest.value = value;
-        newRequest.recipient = recipient;
-        newRequest.approvalCount = 0;
+        Request memory newRequest = Request({
+            description: description,
+            value: value,
+            recipient: recipient,
+            complete: false,
+            approvalCount: 0
+        });
+
+        requests.push(newRequest);
     }
 
     function vote(uint index, bool approve) public isApprover isNewVoter(index) {
