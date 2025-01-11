@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import {Button, Form, FormField, Input, Message, MessageHeader} from "semantic-ui-react";
 import web3 from "../ehereum/web3";
 import { useState } from 'react'
 import Campaign from "../ehereum/campaign";
 import { useRouter } from 'next/router'
 
-const ContributionForm = ({address, minContribution}) => {
+const ContributionForm = ({address, minContribution}: {address: string, minContribution: number}) => {
     const router = useRouter();
     const [contribution, setContribution] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = async (event) => {
+    const onSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         try {

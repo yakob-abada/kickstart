@@ -1,4 +1,3 @@
-import React from "react";
 import Link from 'next/link'
 import { MenuItem, MenuMenu, Menu } from 'semantic-ui-react'
 

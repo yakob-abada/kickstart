@@ -1,22 +1,35 @@
 import React from 'react';
-import Layout from "../../../components/Layout";
+import Layout from "../../../components/layout";
 import {Button, Header, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow} from "semantic-ui-react";
 import Campaign from "../../../ehereum/campaign";
 import Link from "next/link";
 import web3 from "../../../ehereum/web3";
 
-Page.getInitialProps = async ({query}) => {
+interface Request {
+    id: number
+    description: string
+    value: number
+    recipient: string
+    complete: boolean
+    approvalCount: number
+}
+
+interface Query {
+    id: string
+}
+
+Page.getInitialProps = async ({query}: {query: Query}) => {
     const campaign = await Campaign(query.id);
     const requestCount = await campaign.methods.getRequestsCount().call();
     const approverCount = await campaign.methods.approverCount().call()
-    const requests = await Promise.all(Array(parseInt(requestCount)).fill(0).map(async (_, i) => {
+    const requests: Request[] = await Promise.all(Array(parseInt(requestCount)).fill(0).map(async (_, i) => {
         const result = await campaign.methods.requests(i).call()
         return {
             id: i,
             description: result[0],
             value: web3.utils.fromWei(result.value, 'ether').toString(),
             recipient: result.recipient,
-            completed: result.complete,
+            complete: result.complete,
             approvalCount: result.approvalCount.toString(),
         }
     }));
@@ -28,25 +41,25 @@ Page.getInitialProps = async ({query}) => {
     };
 }
 
-const approveRequest = async (e, campaignAdd, id) => {
+const approveRequest = async (e: React.MouseEvent<HTMLButtonElement>, campaignAdd: string, id: number) => {
     e.preventDefault();
     const accounts = await web3.eth.getAccounts();
     const campaign = await Campaign(campaignAdd);
     await campaign.methods.vote(id, true).send({from: accounts[0], gas: '1000000'});
 }
 
-const finalizeRequest = async (e, campaignAdd, id) => {
+const finalizeRequest = async (e: React.MouseEvent<HTMLButtonElement>, campaignAdd: string, id: number) => {
     e.preventDefault();
     const accounts = await web3.eth.getAccounts();
     const campaign = await Campaign(campaignAdd);
     await campaign.methods.finalizeRequest(id).send({from: accounts[0], gas: '1000000'});
 }
 
-const hasApproved = (approvalCount, approverCount) => {
-    return parseInt(approvalCount) >= parseInt(approverCount) / 2;
+const hasApproved = (approvalCount: number, approverCount: number) => {
+    return approvalCount >= approverCount / 2;
 }
 
-const renderRows = (campaignAdd, requests, approverCount) => {
+const renderRows = (campaignAdd: string, requests: Request[], approverCount: number) => {
     return requests.map(request => {
         const approve = hasApproved(request.approvalCount, approverCount)
         return (
@@ -72,7 +85,9 @@ const renderRows = (campaignAdd, requests, approverCount) => {
     })
 }
 
-export default function Page ({campaignAdd, requests, approverCount}) {
+export default function Page (
+    {campaignAdd, requests, approverCount}: {campaignAdd: string, requests: Request[], approverCount: number}
+) {
     return (
         <Layout>
             <Link href={`/campaigns/${campaignAdd}/requests/new`}>

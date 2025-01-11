@@ -3,7 +3,12 @@ import factory from "../ehereum/factory";
 import { Card, Button, Grid, GridColumn } from 'semantic-ui-react'
 import Layout from '../components/layout'
 
-class IndexPage extends Component {
+type MyProps = {
+    // using `interface` is also ok
+    campaigns: string[];
+};
+
+class IndexPage extends Component<MyProps> {
     static async getInitialProps() {
         const campaigns = await factory.methods.getDeployedCampaigns().call();
 

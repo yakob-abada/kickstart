@@ -1,4 +1,5 @@
 import Layout from "../../components/layout";
+import ContributionForm from "../../components/ContributionForm";
 import {
     Button,
     Grid,
@@ -8,11 +9,14 @@ import {
     Segment
 } from "semantic-ui-react";
 import Campaign from "../../ehereum/campaign";
-import ContributionForm from "../../components/ContributionForm";
 import web3 from "../../ehereum/web3";
 import Link from "next/link";
 
-Page.getInitialProps = async ({query}) => {
+interface Query {
+    id: string
+}
+
+Page.getInitialProps = async ({query}: {query: Query}) => {
     const campaign = await Campaign(query.id);
     const summary = await campaign.methods.summary().call();
     return {
@@ -25,7 +29,11 @@ Page.getInitialProps = async ({query}) => {
     };
 }
 
-export default function Page({minContribution, balance, requestsCount, approverCount, campaignAdd}) {
+export default function Page(
+    {minContribution, balance, requestsCount, approverCount, campaignAdd}: {
+        minContribution: number, balance: number, requestsCount: number, approverCount: number, campaignAdd: string
+    }
+) {
     return (
         <Layout>
             <Header as='h3'>Campaign details</Header>

@@ -1,17 +1,17 @@
 import React, {useState} from 'react';
 import Layout from "../../components/layout";
-import {Button, FormField, Form, Message, MessageHeader} from "semantic-ui-react";
+import {Button, FormField, Form, Message, MessageHeader, Input} from "semantic-ui-react";
 import factory from "../../ehereum/factory";
 import web3 from "../../ehereum/web3";
-import { useRouter } from 'next/router'
+import {NextRouter, useRouter} from 'next/router'
 
 const NewCampaign = () => {
     const [minContribution, setMinContribution] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    const router: NextRouter = useRouter();
 
-    const onSubmit = async(event) => {
+    const onSubmit = async(event: React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         try {
@@ -24,6 +24,7 @@ const NewCampaign = () => {
         }
     }
 
+    // @ts-ignore
     return (
         <Layout>
             <h1>Create a campaign</h1>
@@ -34,7 +35,7 @@ const NewCampaign = () => {
                 </Message>
                 <FormField>
                     <label>Min contribution</label>
-                    <input
+                    <Input
                         value={minContribution}
                         onChange={e => setMinContribution(e.target.value)}
                     />

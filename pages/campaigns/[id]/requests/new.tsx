@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../../../components/Layout";
+import Layout from "../../../../components/layout";
 import {Button, Form, FormField, Header, Input, Message, MessageHeader} from "semantic-ui-react";
 import Campaign from "../../../../ehereum/campaign";
 import {useRouter} from "next/router";
@@ -11,15 +11,15 @@ Page.getInitialProps = async ({query}) => {
     };
 }
 
-export default function Page ({campaignAdd}) {
+export default function Page ({campaignAdd}: {campaignAdd: string}) {
     const [description, setDescription] = useState('');
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(0);
     const [recipient, setRecipient] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    const onSubmit = async(event) => {
+    const onSubmit = async(event: React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         try {
@@ -54,7 +54,7 @@ export default function Page ({campaignAdd}) {
                         label='ether'
                         labelPosition='right'
                         value={value}
-                        onChange={e => setValue(e.target.value)}
+                        onChange={e => setValue(parseInt(e.target.value))}
                     />
                 </FormField>
                 <FormField>
