@@ -22,7 +22,7 @@
     "react-dom": "^18.3.1",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
-    "solc": "^0.4.17",
+    "solc": "^0.8.9",
     "web3": "^4.16.0"
   }
 }

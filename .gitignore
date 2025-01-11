@@ -1,3 +1,4 @@
 ./ehereum/build
 ./node_modules
 .idea
+.env
