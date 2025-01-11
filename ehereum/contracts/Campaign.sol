@@ -25,11 +25,11 @@ contract Campaign {
     }
 
     address public  manager;
-    mapping (address => bool) public  approvers;
+    mapping (address => bool) public approvers;
     uint public approverCount;
 
     uint public minContribution;
-    Request[] public  requests;
+    Request[] public requests;
 
 
     function Campaign(uint min, address owner) public {
@@ -94,5 +94,19 @@ contract Campaign {
 
         votedRequest.recipient.transfer(votedRequest.value);
         votedRequest.complete = true;
+    }
+
+    function summary() public view returns(uint, uint, uint, uint, address) {
+        return (
+            minContribution,
+            this.balance,
+            requests.length,
+            approverCount,
+            manager
+        );
+    }
+
+    function getRequestsCount() public view returns(uint) {
+        return requests.length;
     }
 }
