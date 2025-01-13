@@ -1,10 +1,12 @@
 import HDWalletProvider from '@truffle/hdwallet-provider';
 import {Web3} from "web3";
 import compiledFactory from '../ehereum/build/FactoryCampaign.json' with { type: "json" };
+import {configDotenv} from "dotenv";
+configDotenv();
 
 const provider = new HDWalletProvider({
     mnemonic: process.env.MNEMONIC,
-    providerOrUrl: process.env.MNEMONIC_URL,
+    providerOrUrl: process.env.PROVIDER_OR_URL,
 });
 
 const web3 = new Web3(provider);
